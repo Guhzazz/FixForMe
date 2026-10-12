@@ -1,0 +1,100 @@
+CREATE TABLE Contratante 
+( 
+ id INT PRIMARY KEY,  
+ Nome VARCHAR NOT NULL,  
+ Senha VARCHAR NOT NULL,  
+ Email VARCHAR,  
+ Telefone VARCHAR,  
+ NotaContratante FLOAT,  
+ DataCriacao DATE NOT NULL,  
+ Descricao VARCHAR,  
+ ServicosContratados INT,  
+); 
+
+CREATE TABLE Prestador 
+( 
+ idContratante INT PRIMARY KEY,  
+ CPF VARCHAR NOT NULL,  
+ Local INT,  
+ Ativo BOOLEAN,  
+ NotaPrestador FLOAT,  
+ ServicosPrestados INT,  
+ idPlano INT,  
+ UNIQUE (idContratante,CPF)
+); 
+
+CREATE TABLE Plano 
+( 
+ id INT PRIMARY KEY,  
+ Nome VARCHAR NOT NULL,  
+ Valor FLOAT NOT NULL,  
+); 
+
+CREATE TABLE MetricaDiaria 
+( 
+ id INT PRIMARY KEY,  
+ idPrestador INT NOT NULL,  
+ Visualizacoes INT,  
+ Acessos INT,  
+ Dia DATE,  
+); 
+
+CREATE TABLE TipoServico 
+( 
+ id INT PRIMARY KEY,  
+ Nome VARCHAR NOT NULL,  
+); 
+
+CREATE TABLE Certificado 
+( 
+ id INT PRIMARY KEY,  
+ idPrestador INT NOT NULL,  
+ Descricao VARCHAR,  
+ Imagem INT,  
+); 
+
+CREATE TABLE Conversa 
+( 
+ idContratante INT PRIMARY KEY,  
+ idPrestador INT PRIMARY KEY,  
+); 
+
+CREATE TABLE Mensagem 
+( 
+ id INT PRIMARY KEY,  
+ idConversa INT,  
+ Texto VARCHAR,  
+ Horario DATETIME,  
+ Pessoa BOOLEAN,  
+ Oculta BOOLEAN,  
+); 
+
+CREATE TABLE Servico 
+( 
+ idContratante INT PRIMARY KEY,  
+ idPrestador INT PRIMARY KEY,  
+ Local INT,  
+ Descricao VARCHAR,  
+ NotaContratante FLOAT,  
+ NotaPrestados FLOAT,  
+ AvaliacaoContratante VARCHAR,  
+ AvaliacaoPrestador VARCHAR,  
+); 
+
+CREATE TABLE PrestadorTipos 
+( 
+ idTipoServico INT PRIMARY KEY,  
+ idPrestador INT PRIMARY KEY,  
+); 
+
+ALTER TABLE Prestador ADD FOREIGN KEY(idContratante) REFERENCES Contratante (idContratante)
+ALTER TABLE Prestador ADD FOREIGN KEY(idPlano) REFERENCES Plano (idPlano)
+ALTER TABLE MetricaDiaria ADD FOREIGN KEY(idPrestador) REFERENCES Prestador (idPrestador)
+ALTER TABLE Certificado ADD FOREIGN KEY(idPrestador) REFERENCES Prestador (idPrestador)
+ALTER TABLE Conversa ADD FOREIGN KEY(idContratante) REFERENCES Contratante (idContratante)
+ALTER TABLE Conversa ADD FOREIGN KEY(idPrestador) REFERENCES Prestador (idPrestador)
+ALTER TABLE Mensagem ADD FOREIGN KEY(idConversa) REFERENCES Conversa (idConversa)
+ALTER TABLE Servico ADD FOREIGN KEY(idContratante) REFERENCES Contratante (idContratante)
+ALTER TABLE Servico ADD FOREIGN KEY(idPrestador) REFERENCES Prestador (idPrestador)
+ALTER TABLE PrestadorTipos ADD FOREIGN KEY(idTipoServico) REFERENCES TipoServico (idTipoServico)
+ALTER TABLE PrestadorTipos ADD FOREIGN KEY(idPrestador) REFERENCES Prestador (idPrestador)
